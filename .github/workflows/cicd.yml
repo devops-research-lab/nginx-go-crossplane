@@ -1,49 +1,35 @@
 name: Continuous Integration
-
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - reopened
-      - synchronize
-
+  push: null
 jobs:
   checks:
     name: Linting
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Golang Environment
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - name: Lint Code
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.64.2
-          only-new-issues: true
-          verify: false
-
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Golang Environment
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+    - name: Lint Code
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v1.64.2
+        only-new-issues: true
+        verify: false
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-22.04
     needs: checks
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Setup Golang Environment
-        uses: actions/setup-go@v5
-      - name: Run Tests
-        run: make test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./results/crossplane-go-coverage.out
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Setup Golang Environment
+      uses: actions/setup-go@v5
+    - name: Run Tests
+      run: make test
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        files: ./results/crossplane-go-coverage.out
